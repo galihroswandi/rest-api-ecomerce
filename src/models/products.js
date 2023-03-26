@@ -6,9 +6,14 @@ const getAllProducts = () => {
     return dbPool.execute(SQLQuery);
 }
 
-const addProduct = (body) => {
-    const SQLQuery = `  INSERT INTO products (nama_product, deskripsi, harga, gambar) 
-                        VALUES ('${body.nama_product}', '${body.deskripsi}', '${body.harga}', '${body.gambar}')`;
+const findById = (id) => {
+    const SQLQuery = `SELECT * FROM products WHERE id_product='${id}'`;
+    return dbPool.execute(SQLQuery);
+}
+
+const addProduct = (body, image) => {
+
+    const SQLQuery = `INSERT INTO products VALUES (null,'${body.nama_product}', '${body.deskripsi}', '${body.harga}', '${image}')`;
 
     return dbPool.execute(SQLQuery);
 }
@@ -33,5 +38,6 @@ module.exports = {
     getAllProducts,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    findById
 }

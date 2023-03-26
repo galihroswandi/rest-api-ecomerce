@@ -2,8 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-const upload = require('./../middleware/multer');
-
 const productController = require('./../controller/products');
 
 // Menambahkan Product

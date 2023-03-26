@@ -1,4 +1,6 @@
 const productsModel = require('./../models/products');
+const fs = require('fs');
+const path = require('path');
 
 const getAllProducts = async (req, res) => {
     try {
@@ -17,9 +19,16 @@ const getAllProducts = async (req, res) => {
 
 const addProduct = async (req, res) => {
 
-    const { body } = req;
+    if (!req.file) {
+        const error = new Error("Image Harus Diisi");
+        error.errorStatus = 422;
+        throw error;
+    }
 
-    if (!body.nama_product || !body.deskripsi || !body.harga || !body.gambar) {
+    const { body } = req;
+    const image = `images/${req.file.filename}`;
+
+    if (!body.nama_product || !body.deskripsi || !body.harga) {
         res.status(400).json({
             message: 'Anda mengirim data yang salah !',
             data: body
@@ -27,7 +36,7 @@ const addProduct = async (req, res) => {
     }
 
     try {
-        await productsModel.addProduct(body);
+        await productsModel.addProduct(body, image);
         res.status(201).json({
             message: 'create new product success',
             data: body
@@ -64,7 +73,16 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     const { id_product } = req.params;
 
+    const [findProduct] = await productsModel.findById(id_product);
+    if (findProduct.length == 0) {
+        res.status(404).json({
+            message: `Data dengan id '${id_product}' tidak ditemukan !`,
+        })
+        return false;
+    }
+
     try {
+        removeImage(findProduct[0].gambar);
         await productsModel.deleteProduct(id_product);
         res.json({
             message: 'delete success',
@@ -76,6 +94,11 @@ const deleteProduct = async (req, res) => {
             serverMessage: error
         })
     }
+}
+
+const removeImage = (filepath) => {
+    filepath = path.join(__dirname, '../../', filepath);
+    fs.unlink(filepath, err => console.log(err));
 }
 
 module.exports = {

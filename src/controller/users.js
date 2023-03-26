@@ -18,7 +18,7 @@ const getAllUsers = async (req, res) => {
 const createNewUser = async (req, res) => {
     const { body } = req;
 
-    if (!body.email || !body.name || !body.address) {
+    if (!body.email || !body.name || !body.password || !body.address) {
         return res.status(400).json({
             message: 'Anda mengirimkan data yang salah',
             data: null
@@ -40,15 +40,15 @@ const createNewUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-    const { id } = req.params;
+    const { id_user } = req.params;
     const { body } = req;
 
     try {
-        await usersModel.updateUser(body, id);
+        await usersModel.updateUser(body, id_user);
         res.json({
             message: 'update user success',
             data: {
-                id,
+                id_user,
                 ...body
             }
         })
@@ -61,9 +61,9 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    const { id } = req.params;
+    const { id_user } = req.params;
     try {
-        await usersModel.deleteUser(id);
+        await usersModel.deleteUser(id_user);
         res.json({
             message: "DELETE data success",
             data: null
