@@ -13,17 +13,17 @@ const findById = (id) => {
 
 const addProduct = (body, image) => {
 
-    const SQLQuery = `INSERT INTO products VALUES (null,'${body.nama_product}', '${body.deskripsi}', '${body.harga}', '${image}')`;
+    const SQLQuery = `INSERT INTO products VALUES (null,'${body.nama_product}', '${body.deskripsi}', '${body.harga}', '${image}', '${body.id_kategori}')`;
 
     return dbPool.execute(SQLQuery);
 }
 
-const updateProduct = (body, id_product) => {
+const updateProduct = (body, id_product, image) => {
     const SQLQuery = `  UPDATE products SET 
                         nama_product='${body.nama_product}',
-                        deskripsi='${body.deskripsi}',
+                        deskripsi='${body.deskripsi}', 
                         harga='${body.harga}',
-                        gambar='${body.gambar}' WHERE id_product='${id_product}'`;
+                        gambar='${image}' WHERE id_product='${id_product}'`;
 
     return dbPool.execute(SQLQuery);
 }

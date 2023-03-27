@@ -1,12 +1,12 @@
-const productsModel = require('./../models/products');
+const kategoriModel = require('../models/kategoris');
 const fs = require('fs');
 const path = require('path');
 
-const getAllProducts = async (req, res) => {
+const getAllKategoris = async (req, res) => {
     try {
-        const [data] = await productsModel.getAllProducts();
+        const [data] = await kategoriModel.getAllKategoris();
         res.json({
-            message: "Get All Product success",
+            message: "Get All Kategori success",
             data,
         })
     } catch (error) {
@@ -17,18 +17,18 @@ const getAllProducts = async (req, res) => {
     }
 }
 
-const addProduct = async (req, res) => {
+const addKategori = async (req, res) => {
 
     if (!req.file) {
-        const error = new Error("Image Harus Diisi");
-        error.errorStatus = 422;
-        throw error;
+        res.status(422).json({
+            message: "Image harus diisi"
+        })
     }
 
     const { body } = req;
     const image = `images/${req.file.filename}`;
 
-    if (!body.nama_product || !body.deskripsi || !body.harga || !body.id_kategori) {
+    if (!body.nama_kategori) {
         res.status(400).json({
             message: 'Anda mengirim data yang salah !',
             data: body
@@ -36,7 +36,7 @@ const addProduct = async (req, res) => {
     }
 
     try {
-        await productsModel.addProduct(body, image);
+        await kategoriModel.addKategori(body, image);
         res.status(201).json({
             message: 'create new product success',
             data: body
@@ -49,38 +49,38 @@ const addProduct = async (req, res) => {
     }
 }
 
-const updateProduct = async (req, res) => {
+const updateKategori = async (req, res) => {
     if (!req.file) {
-        const error = new Error("Image Harus Diisi");
-        error.errorStatus = 422;
-        throw error;
+        res.status(422).json({
+            message: "Image harus diisi"
+        })
     }
 
     const { body } = req;
     const image = `images/${req.file.filename}`;
-    const { id_product } = req.params;
+    const { id_kategori } = req.params;
 
-    if (!body.nama_product || !body.deskripsi || !body.harga || !body.id_kategori) {
+    if (!body.nama_kategori) {
         res.status(400).json({
             message: 'Anda mengirim data yang salah !',
             data: body
         })
     }
 
-    const [findProduct] = await productsModel.findById(id_product);
-    if (findProduct.length == 0) {
+    const [findKategori] = await kategoriModel.findById(id_kategori);
+    if (findKategori.length == 0) {
         res.status(404).json({
-            message: `Data dengan id '${id_product}' tidak ditemukan !`,
+            message: `Data dengan id '${id_kategori}' tidak ditemukan !`,
         })
     }
 
     try {
-        await productsModel.updateProduct(body, id_product, image);
-        removeImage(findProduct[0].gambar);
+        await kategoriModel.updateKategori(body, id_kategori, image);
+        removeImage(findKategori[0].gambar);
         res.json({
             message: 'update product succes',
             data: {
-                id_product,
+                id_kategori,
                 ...body
             }
         })
@@ -92,20 +92,20 @@ const updateProduct = async (req, res) => {
     }
 }
 
-const deleteProduct = async (req, res) => {
-    const { id_product } = req.params;
+const deleteKategori = async (req, res) => {
+    const { id_kategori } = req.params;
 
-    const [findProduct] = await productsModel.findById(id_product);
-    if (findProduct.length == 0) {
+    const [findKategori] = await kategoriModel.findById(id_kategori);
+    if (findKategori.length == 0) {
         res.status(404).json({
-            message: `Data dengan id '${id_product}' tidak ditemukan !`,
+            message: `Data dengan id '${id_kategori}' tidak ditemukan !`,
         })
         return false;
     }
 
     try {
-        removeImage(findProduct[0].gambar);
-        await productsModel.deleteProduct(id_product);
+        removeImage(findKategori[0].gambar);
+        await kategoriModel.deleteKategori(id_kategori);
         res.json({
             message: 'delete success',
             data: null
@@ -124,8 +124,8 @@ const removeImage = (filepath) => {
 }
 
 module.exports = {
-    getAllProducts,
-    updateProduct,
-    addProduct,
-    deleteProduct
+    getAllKategoris,
+    addKategori,
+    updateKategori,
+    deleteKategori
 }
