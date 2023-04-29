@@ -17,6 +17,24 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+const getSingleProduct = async (req, res) => {
+
+    const { id_product } = req.params;
+
+    try {
+        const [data] = await productsModel.findById(id_product);
+        res.json({
+            message: "Get All Product success",
+            data,
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Server Error',
+            serverMessage: error
+        })
+    }
+}
+
 const addProduct = async (req, res) => {
 
     if (!req.file) {
@@ -127,5 +145,6 @@ module.exports = {
     getAllProducts,
     updateProduct,
     addProduct,
-    deleteProduct
+    deleteProduct,
+    getSingleProduct
 }

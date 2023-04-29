@@ -1,7 +1,7 @@
 const dbPool = require('./../config/database');
 
 const getAllProducts = () => {
-    const SQLQuery = "SELECT * FROM products";
+    const SQLQuery = "SELECT * FROM products JOIN kategori ON products.id_kategori=kategori.id_kategori";
 
     return dbPool.execute(SQLQuery);
 }
@@ -23,7 +23,7 @@ const updateProduct = (body, id_product, image) => {
                         nama_product='${body.nama_product}',
                         deskripsi='${body.deskripsi}', 
                         harga='${body.harga}',
-                        gambar='${image}' WHERE id_product='${id_product}'`;
+                        gambar_product='${image}' WHERE id_product='${id_product}'`;
 
     return dbPool.execute(SQLQuery);
 }

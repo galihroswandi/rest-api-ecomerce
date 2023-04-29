@@ -21,7 +21,7 @@ const addKategori = (body, image) => {
 const updateKategori = (body, id_kategori, image) => {
     const SQLQuery = `  UPDATE kategori SET 
                         nama_kategori='${body.nama_kategori}',
-                        gambar='${image}' WHERE id_kategori='${id_kategori}'`;
+                        gambar_kategori='${image}' WHERE id_kategori='${id_kategori}'`;
 
     return dbPool.execute(SQLQuery);
 }
